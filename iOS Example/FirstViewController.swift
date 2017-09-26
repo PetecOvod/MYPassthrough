@@ -73,6 +73,7 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         let cellDesc = LabelDescriptor(for: "It also supports working with cells")
         cellDesc.position = .bottom
         let cellHoleDesc = CellViewDescriptor(tableView: tableView, indexPath: IndexPath(row: 0, section: 0), forOrientation: .any)
+        cellHoleDesc.labelDescriptor = cellDesc
         var cellTask = PassthroughTask(with: [cellHoleDesc])
         
         cellTask.didFinishTask = {
@@ -96,7 +97,7 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     func createDemoTextPositionBottomTopTask() -> PassthroughTask {
         let labelDesc = LabelDescriptor(for: "The text can be from bottom and center in a portrait orientation. Try to rotate.")
         labelDesc.position = .bottom
-        let holeDesc = HoleViewDescriptor(view: startButton, type: .rect(cornerRadius: 5, margin: 10), forOrientation: .portrait)
+        let holeDesc = HoleViewDescriptor(view: startButton, paddingX: 10, paddingY: 10, type: .rect(cornerRadius: 5, margin: 0), forOrientation: .portrait)
         holeDesc.labelDescriptor = labelDesc
         
         let labelDesc2 = LabelDescriptor(for: "The text can be from top and left in a portrait orientation")
