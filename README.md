@@ -1,6 +1,11 @@
 # MYPassthrough
 
-MYPassthrough helps you to guide the user through your application, step by step.  
+[![Platform](https://img.shields.io/cocoapods/p/MYPassthrough.svg)](https://github.com/PetecOvod/MYPassthrough)
+[![CocoaPods](https://img.shields.io/cocoapods/v/MYPassthrough.svg)](http://cocoadocs.org/docsets/MYPassthrough)
+[![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)](https://github.com/PetecOvod/MYPassthrough)
+[![License](http://img.shields.io/cocoapods/l/MYPassthrough.svg)](https://raw.githubusercontent.com/PetecOvod/MYPassthrough/master/LICENSE)
+
+MYPassthrough helps you to guide the user through your application, step by step.
 With the help of this framework, it will be easier for you to solve such tasks as guide, tutorials, help, onboarding, etc.
 
 ## Features
@@ -28,7 +33,7 @@ github "PetecOvod/MYPassthrough"
 
 ## Code Example
 
-Four easy steps to get started.  
+Four easy steps to get started.
 The first is to describe the text you want to show
 
 ```swift
