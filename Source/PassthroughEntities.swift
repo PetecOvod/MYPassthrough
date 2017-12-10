@@ -104,7 +104,7 @@ open class CloseButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func touchUpInsideAction() {
+    @objc func touchUpInsideAction() {
         touchUpInsideHandler?()
     }
     

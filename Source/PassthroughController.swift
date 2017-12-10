@@ -136,7 +136,7 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
     
     // MARK: - Action
     
-    func tapAction() {
+    @objc func tapAction() {
         didTapAction?()
     }
     
