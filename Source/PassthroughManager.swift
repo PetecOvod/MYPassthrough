@@ -31,6 +31,9 @@ open class PassthroughManager {
            passthroughRootController.animationDuration = newValue
         }
     }
+    public var state: PassthroughState {
+        return currentState
+    }
     
     public var infoCommonConfigurator: ((InfoDescriptor) -> Void)?
     public var labelCommonConfigurator: ((LabelDescriptor) -> Void)?

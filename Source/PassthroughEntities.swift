@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum PassthroughState {
+public enum PassthroughState {
     case initialization
     case loaded
     case demonstration
