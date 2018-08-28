@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E10022C92135BB6000B06170 /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10022C82135BB6000B06170 /* ThirdViewController.swift */; };
 		E11A1B841F79484C00692C01 /* MYPassthrough.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E188C5B31F73FCB6003488C7 /* MYPassthrough.framework */; };
 		E11A1B851F79484C00692C01 /* MYPassthrough.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E188C5B31F73FCB6003488C7 /* MYPassthrough.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E188C5C71F767826003488C7 /* MYPassthrough.h in Headers */ = {isa = PBXBuildFile; fileRef = E188C5C21F73FFE8003488C7 /* MYPassthrough.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -46,6 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E10022C82135BB6000B06170 /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		E188C5B31F73FCB6003488C7 /* MYPassthrough.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MYPassthrough.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E188C5C11F73FFE8003488C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E188C5C21F73FFE8003488C7 /* MYPassthrough.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MYPassthrough.h; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				E188C5D11F767A51003488C7 /* AppDelegate.swift */,
 				E188C5D31F767A51003488C7 /* FirstViewController.swift */,
 				E188C5D51F767A51003488C7 /* SecondViewController.swift */,
+				E10022C82135BB6000B06170 /* ThirdViewController.swift */,
 				E188C5D71F767A51003488C7 /* Main.storyboard */,
 				E188C5DA1F767A51003488C7 /* Assets.xcassets */,
 				E188C5DC1F767A51003488C7 /* LaunchScreen.storyboard */,
@@ -253,6 +256,7 @@
 			files = (
 				E188C5D61F767A51003488C7 /* SecondViewController.swift in Sources */,
 				E188C5D21F767A51003488C7 /* AppDelegate.swift in Sources */,
+				E10022C92135BB6000B06170 /* ThirdViewController.swift in Sources */,
 				E188C5D41F767A51003488C7 /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

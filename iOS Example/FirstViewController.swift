@@ -16,6 +16,8 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var leftView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
+    private var isNeedСontinueTutorial = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +38,13 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         PassthroughManager.shared.closeButton.setTitle("Skip", for: .normal)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        guard isNeedСontinueTutorial else { return }
+        continueTutorial()
+    }
+    
     // MARK: Action
     
     @IBAction func startAction(_ sender: UIButton) {
@@ -43,6 +52,29 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     // MARK: Private
+    
+    private func openThirdViewController() {
+        performSegue(withIdentifier: "segueToThirdViewController", sender: nil)
+    }
+    
+    private func continueTutorial() {
+        guard let tabBarController = self.parent as? UITabBarController else { return }
+        
+        tabBarController.selectedViewController = tabBarController.viewControllers?[1]
+        
+        let infoDesc3 = InfoDescriptor(for: "Thank you for attention")
+        infoDesc3.offset = CGPoint(x: 0, y: -100)
+        var infoTask3 = PassthroughTask(with: [])
+        infoTask3.infoDescriptor = infoDesc3
+        
+        PassthroughManager.shared.display(tasks: [infoTask3]) {
+            [weak self] isUserSkipDemo in
+            
+            self?.isNeedСontinueTutorial = false
+            
+            print("isUserSkipDemo: \(isUserSkipDemo)")
+        }
+    }
     
     private func startDemonstration() {
         let infoDesc = InfoDescriptor(for: "Welcome to the demo of MYPassthrough. Let's see what it can do. Tap the screen")
@@ -74,23 +106,20 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         cellDesc.position = .bottom
         let cellHoleDesc = CellViewDescriptor(tableView: tableView, indexPath: IndexPath(row: 0, section: 0), forOrientation: .any)
         cellHoleDesc.labelDescriptor = cellDesc
-        var cellTask = PassthroughTask(with: [cellHoleDesc])
-        
-        cellTask.didFinishTask = {
-            guard let tabBarController = self.parent as? UITabBarController else { return }
-            
-            tabBarController.selectedIndex = 1
-        }
+        let cellTask = PassthroughTask(with: [cellHoleDesc])
         
         let infoDesc3 = InfoDescriptor(for: "Thank you for attention")
         infoDesc3.offset = CGPoint(x: 0, y: -100)
         var infoTask3 = PassthroughTask(with: [])
         infoTask3.infoDescriptor = infoDesc3
         
-        PassthroughManager.shared.display(tasks: [infoTask, infoTask2, rotationTask, rightLeftTask, handleTask, cellTask, infoTask3]) {
-            isUserSkipDemo in
+        PassthroughManager.shared.display(tasks: [infoTask, infoTask2, rotationTask, rightLeftTask, handleTask, cellTask]) {
+            [weak self] isUserSkipDemo in
             
             print("isUserSkipDemo: \(isUserSkipDemo)")
+            if !isUserSkipDemo {
+                self?.openThirdViewController()
+            }
         }
     }
     
@@ -149,5 +178,16 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         cell.detailTextLabel?.text = "John"
         
         return cell
+    }
+    
+    // MARK: Segue
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destVC = segue.destination as! ThirdViewController
+        destVC.isNeedСontinueTutorial = true
+    }
+    
+    @IBAction func unwindFromThirdViewController(_ sender: UIStoryboardSegue) {
+        isNeedСontinueTutorial = true
     }
 }
