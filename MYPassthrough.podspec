@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Yaroslav Minaev" => "mail@minaev.pro" }
   s.ios.deployment_target = '8.0'
+  s.swift_version = '4.2'
   s.source       = {
     :git => 'https://github.com/PetecOvod/MYPassthrough.git',
     :tag => s.version }
