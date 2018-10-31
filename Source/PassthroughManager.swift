@@ -71,7 +71,7 @@ open class PassthroughManager {
         let passthroughWindow = UIWindow(frame: UIScreen.main.bounds)
         passthroughWindow.backgroundColor = UIColor.clear
         passthroughWindow.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        passthroughWindow.windowLevel = UIWindowLevelAlert
+        passthroughWindow.windowLevel = .alert
         self.passthroughWindow = passthroughWindow
         self.passthroughRootController = PassthroughController()
         
@@ -85,7 +85,7 @@ open class PassthroughManager {
         
         passthroughWindow.isHidden = false
         passthroughWindow.rootViewController = self.passthroughRootController
-        passthroughWindow.windowLevel = UIWindowLevelNormal + 1
+        passthroughWindow.windowLevel = .normal + 1
         passthroughWindow.rootViewController?.view.frame = passthroughWindow.frame
         self.tasks = tasks
         self.completion = completion

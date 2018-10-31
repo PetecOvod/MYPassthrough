@@ -62,7 +62,7 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
     }
     
     func setupInitialMask(withColor color: UIColor) {
-        mask.fillRule = kCAFillRuleEvenOdd
+        mask.fillRule = .evenOdd
         mask.fillColor = color.cgColor
         view.layer.addSublayer(mask)
         mask.path = initialPath.cgPath
@@ -76,11 +76,11 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
     func adjust(with overlayPath: UIBezierPath, animated: Bool) {
         if animated {
             let anim = CABasicAnimation(keyPath: "path")
-            anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+            anim.timingFunction = CAMediaTimingFunction(name: .easeOut)
             anim.duration = animationDuration
             anim.delegate = self
             anim.isRemovedOnCompletion = false
-            anim.fillMode = kCAFillModeForwards
+            anim.fillMode = .forwards
             anim.fromValue = mask.path
             anim.toValue = overlayPath.cgPath
             mask.add(anim, forKey: "path")
