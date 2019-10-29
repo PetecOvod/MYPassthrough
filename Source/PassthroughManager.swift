@@ -9,40 +9,42 @@
 import UIKit
 
 open class PassthroughManager {
-
     public static let shared = PassthroughManager()
-    
+
     public var bottomOffset: CGFloat = 40
     public var topOffset: CGFloat = 40
-    public var dimColor = UIColor.black.withAlphaComponent(0.7) {
+    public var dimColor = UIColor.black.withAlphaComponent(0.8) {
         didSet {
             passthroughRootController.maskFillColor = dimColor
         }
     }
+
     public var closeButton: CloseButton {
         return passthroughRootController.closeButton
     }
-    
+
     public var animationDuration: CFTimeInterval {
         get {
-           return passthroughRootController.animationDuration
+            return passthroughRootController.animationDuration
         }
         set {
-           passthroughRootController.animationDuration = newValue
+            passthroughRootController.animationDuration = newValue
         }
     }
+
     public var state: PassthroughState {
         return currentState
     }
-    
+
     public var infoCommonConfigurator: ((InfoDescriptor) -> Void)?
     public var labelCommonConfigurator: ((LabelDescriptor) -> Void)?
-    
+
     private var mainView: UIView {
         return passthroughRootController.view
     }
-    private var demonastrationView: UIView {
-        return passthroughRootController.demonastrationView
+
+    private var demonstrationView: UIView {
+        return passthroughRootController.demonstrationView
     }
 
     private var currentState: PassthroughState = .loaded {
@@ -59,46 +61,46 @@ open class PassthroughManager {
             }
         }
     }
-    
-    private var passthroughWindow: UIWindow
-    private var passthroughRootController: PassthroughController
+
+    private var passthroughWindow: UIWindow!
+    private var passthroughRootController: PassthroughController!
     private var tasks: [PassthroughTask] = []
     private var currentTaskIndex: Int = 0
     private var completion: ((Bool) -> Swift.Void)?
     private var isUserCancel: Bool = false
-        
+
     private init() {
         let passthroughWindow = UIWindow(frame: UIScreen.main.bounds)
-        passthroughWindow.backgroundColor = UIColor.clear
+        passthroughWindow.backgroundColor = .clear
         passthroughWindow.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         passthroughWindow.windowLevel = .alert
         self.passthroughWindow = passthroughWindow
-        self.passthroughRootController = PassthroughController()
-        
+        passthroughRootController = PassthroughController()
+
         bindRootController()
     }
-    
+
     // MARK: - Public
-    
+
     public func display(tasks: [PassthroughTask], completion: ((Bool) -> Swift.Void)? = nil) {
         guard !tasks.isEmpty else { return }
-        
+
         passthroughWindow.isHidden = false
-        passthroughWindow.rootViewController = self.passthroughRootController
+        passthroughWindow.rootViewController = passthroughRootController
         passthroughWindow.windowLevel = .normal + 1
         passthroughWindow.rootViewController?.view.frame = passthroughWindow.frame
         self.tasks = tasks
         self.completion = completion
     }
-    
+
     public func hide() {
         guard currentState == .demonstration else { return }
         isUserCancel = true
         finishDemonstration()
     }
-    
+
     // MARK: - Private
-    
+
     private func bindRootController() {
         passthroughRootController.didTapAction = {
             [weak self] in
@@ -108,13 +110,14 @@ open class PassthroughManager {
             sSelf.currentTaskIndex += 1
             sSelf.handleTask(for: sSelf.currentTaskIndex)
         }
+
         passthroughRootController.didCancelAction = {
             [weak self] in
             guard let sSelf = self else { return }
             sSelf.isUserCancel = true
             sSelf.finishDemonstration()
         }
-        
+
         passthroughRootController.didOrientationChange = {
             [weak self] in
             guard let sSelf = self else { return }
@@ -126,7 +129,7 @@ open class PassthroughManager {
             sSelf.passthroughRootController.adjust(with: overlayPath, animated: false)
             sSelf.handleTask(for: sSelf.currentTaskIndex)
         }
-        
+
         passthroughRootController.didFinishedAnimation = {
             [weak self] in
             guard let sSelf = self else { return }
@@ -135,12 +138,13 @@ open class PassthroughManager {
                 sSelf.cleanUp()
             }
         }
+
         passthroughRootController.didChangeState = {
             [weak self] state in
             self?.currentState = state
         }
     }
-    
+
     private func handleTask(for index: Int) {
         guard tasks.count > index else {
             finishDemonstration()
@@ -153,11 +157,11 @@ open class PassthroughManager {
         updateLabelsPosition()
         passthroughRootController.adjust(with: overlayPath, animated: true)
     }
-    
+
     private func finishDemonstration() {
         passthroughRootController.finishDemonstration()
     }
-    
+
     private func cleanUp() {
         passthroughWindow.isHidden = true
         passthroughWindow.rootViewController = nil
@@ -183,31 +187,31 @@ open class PassthroughManager {
                     path = UIBezierPath(roundedRect: frame.insetBy(dx: -margin, dy: -margin).integral, cornerRadius: cornerRadius)
                 }
                 overlayPath.append(path)
-                
+
                 calculateLabelPosition(for: frame, withlabelDescriptor: descriptor.labelDescriptor)
             }
         }
-        
+
         return overlayPath
     }
-    
+
     private func startAnimatioRect(for rect: CGRect) -> CGRect {
         return CGRect(x: rect.midX - 2, y: rect.midY - 2, width: 4, height: 4).integral
     }
-    
+
     private func didFinishTask(at index: Int) {
         let task = tasks[index]
         task.didFinishTask?()
     }
-    
+
     private func calculateClosePosition(for task: PassthroughTask) {
         if task.closeButtonPosition != closeButton.position {
             closeButton.alpha = 0.0
-            
+
             let bounds = mainView.bounds
             var x: CGFloat = 0
             var y: CGFloat = 0
-            
+
             switch task.closeButtonPosition {
             case .bottomLeft(let xMargin, let yMargin):
                 closeButton.position = .bottomLeft(xMargin: xMargin, yMargin: yMargin)
@@ -226,19 +230,19 @@ open class PassthroughManager {
                 x = bounds.width - xMargin - closeButton.frame.width
                 y = yMargin
             }
-            
+
             closeButton.frame.origin = CGPoint(x: x, y: y)
-            
+
             UIView.animate(withDuration: animationDuration) { [weak self] in
                 self?.closeButton.alpha = 1.0
             }
         }
     }
-    
+
     private func configLabel(with descriptor: Descriptor) -> UILabel {
         let bounds = mainView.bounds
         let label = descriptor.label
-        demonastrationView.addSubview(label)
+        demonstrationView.addSubview(label)
         label.alpha = 0.0
         switch descriptor.widthControl {
         case .precise(let value):
@@ -248,7 +252,7 @@ open class PassthroughManager {
         }
         label.text = descriptor.text
         label.sizeToFit()
-        
+
         return label
     }
 
@@ -256,10 +260,10 @@ open class PassthroughManager {
         guard let labelDescriptor = labelDescriptor else { return }
         let bounds = mainView.bounds
         let label = configLabel(with: labelDescriptor)
-        
+
         var x: CGFloat = 0
         var y: CGFloat = 0
-        
+
         switch labelDescriptor.aligment {
         case .right:
             x = bounds.width - label.frame.width - labelDescriptor.margin
@@ -267,13 +271,12 @@ open class PassthroughManager {
             x = (bounds.width - label.frame.width) / 2
         case .left:
             x = labelDescriptor.margin
-            
         }
-        
+
         switch labelDescriptor.position {
         case .top:
             y = overlayRect.origin.y - label.frame.height - labelDescriptor.margin
-            
+
             if y < topOffset {
                 y = overlayRect.origin.y + overlayRect.height + labelDescriptor.margin
             }
@@ -290,18 +293,18 @@ open class PassthroughManager {
             y = overlayRect.origin.y + overlayRect.height / 2 - label.frame.height / 2
             x = overlayRect.origin.x - label.frame.width - labelDescriptor.margin
         }
-        
+
         label.frame.origin = CGPoint(x: x, y: y)
     }
-    
+
     private func calculateLabelPosition(for infoDescriptor: InfoDescriptor?) {
         guard let infoDescriptor = infoDescriptor else { return }
         let bounds = mainView.bounds
         let label = configLabel(with: infoDescriptor)
-        
+
         var x: CGFloat = 0
         var y: CGFloat = 0
-        
+
         switch infoDescriptor.aligment {
         case .right:
             x = bounds.width - label.frame.width - infoDescriptor.offset.x
@@ -310,16 +313,16 @@ open class PassthroughManager {
         case .left:
             x = infoDescriptor.offset.x
         }
-        
+
         y = (bounds.height - label.frame.height) / 2 + infoDescriptor.offset.y
-        
+
         label.frame.origin = CGPoint(x: x, y: y)
     }
-    
+
     private func updateLabelsPosition() {
-        for view in demonastrationView.subviews {
-            UIView.animate(withDuration: animationDuration) {
-                view.alpha = 1.0
+        for view in demonstrationView.subviews {
+            UIView.animate(withDuration: animationDuration) { [weak view] in
+                view?.alpha = 1.0
             }
         }
     }
@@ -333,7 +336,7 @@ private extension UIBezierPath {
         let halfHeight = rect.height / 2
         let radius = sqrt(halfWidth * halfWidth + halfHeight * halfHeight)
         let center = CGPoint(x: rect.midX, y: rect.midY)
-        
+
         self.init(roundedRect: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2).integral, cornerRadius: radius)
     }
 }
