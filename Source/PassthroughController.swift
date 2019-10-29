@@ -134,7 +134,7 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
             self.clean()
             self.adjust(with: self.emptyPath, animated: false)
         }) { [unowned self] _ in
-            self.orientationDidChange()
+            self.orientationDidChange(newSize: size)
         }
     }
 
@@ -143,11 +143,12 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
     @objc func tapAction() {
         didTapAction?()
     }
-    
-    func orientationDidChange() {
+
+    func orientationDidChange(newSize: CGSize) {
         guard let currentOrientation = PassthroughOrientation(UIDevice.current.orientation) else { return }
-        guard lastOrientation != currentOrientation else { return }
+        guard lastOrientation != currentOrientation || lastSize != newSize else { return }
         didOrientationChange?()
+        lastSize = newSize
         lastOrientation = currentOrientation
     }
 
