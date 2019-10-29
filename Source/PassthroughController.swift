@@ -26,7 +26,7 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
     }
 
     var animationDuration: CFTimeInterval = 0.5
-    var closeButton = CloseButton(frame: CGRect.zero)
+    var closeButton = CloseButton(frame: .zero)
     var maskFillColor: UIColor! {
         didSet {
             mask.fillColor = maskFillColor.cgColor
@@ -83,7 +83,7 @@ class PassthroughController: UIViewController, CAAnimationDelegate {
             anim.timingFunction = CAMediaTimingFunction(name: .easeOut)
             anim.duration = animationDuration
             anim.delegate = self
-            anim.isRemovedOnCompletion = false
+            anim.isRemovedOnCompletion = true
             anim.fillMode = .forwards
             anim.fromValue = mask.path
             anim.toValue = overlayPath.cgPath
