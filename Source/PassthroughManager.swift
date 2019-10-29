@@ -9,7 +9,19 @@
 import UIKit
 
 open class PassthroughManager {
-    public static let shared = PassthroughManager()
+    private static var sharedInstance: PassthroughManager?
+    public class var shared: PassthroughManager {
+        guard let sharedInstance = self.sharedInstance else {
+            let sharedInstance = PassthroughManager()
+            self.sharedInstance = sharedInstance
+            return sharedInstance
+        }
+        return sharedInstance
+    }
+
+    public class func destroyShared() {
+        sharedInstance = nil
+    }
 
     public var bottomOffset: CGFloat = 40
     public var topOffset: CGFloat = 40
