@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MYPassthrough"
-  s.version      = "0.5"
+  s.version      = "0.6"
   s.summary      = "Framework that helps you to guide the user through your application, step by step."
   s.description  = <<-DESC
                     With the help of this framework, it will be easier for you to solve such tasks: guide, tutorial, help, onboarding
