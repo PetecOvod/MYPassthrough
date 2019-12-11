@@ -23,7 +23,7 @@ public enum PassthroughOrientation: Int {
     case any
     case portrait
     case landscape
-    
+
     init?(_ orientation: UIDeviceOrientation) {
         switch orientation {
         case .landscapeLeft, .landscapeRight:
@@ -41,7 +41,7 @@ public enum ButtonPosition: Equatable {
     case bottomRight(xMargin: CGFloat, yMargin: CGFloat)
     case topLeft(xMargin: CGFloat, yMargin: CGFloat)
     case topRight(xMargin: CGFloat, yMargin: CGFloat)
-    
+
     public static func == (lhs: ButtonPosition, rhs: ButtonPosition) -> Bool {
         switch (lhs, rhs) {
         case (.bottomLeft(let lhsxMargin, let lhsyMargin), .bottomLeft(let rhsxMargin, let rhsyMargin)):
@@ -80,7 +80,7 @@ public struct PassthroughTask {
     public var infoDescriptor: InfoDescriptor?
     public var didFinishTask: (() -> Void)?
     public var orientationDidChange: (() -> Void)?
-    
+
     public init(with holeDescriptors: [HoleDescriptor]) {
         self.holeDescriptors = holeDescriptors
     }
@@ -90,16 +90,16 @@ open class CloseButton: UIButton {
     public var closeButtonPosition: ButtonPosition? {
         return position
     }
-    
+
     var position: ButtonPosition?
     var touchUpInsideHandler: (() -> Void)?
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         addTarget(self, action: #selector(touchUpInsideAction), for: .touchUpInside)
-        self.configureAppearance()
+        configureAppearance()
     }
-    
+
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -107,9 +107,9 @@ open class CloseButton: UIButton {
     @objc func touchUpInsideAction() {
         touchUpInsideHandler?()
     }
-    
+
     // MARK: - Private
-    
+
     private func configureAppearance() {
         tintColor = UIColor.white
         titleLabel?.textColor = UIColor.white
@@ -123,13 +123,13 @@ open class HoleDescriptor: HoleLocation {
     public let type: HoleType
     public let frame: CGRect
     public let orientation: PassthroughOrientation
-    
+
     public init(frame: CGRect, type: HoleType, forOrientation orientation: PassthroughOrientation) {
         self.frame = frame.integral
         self.type = type
         self.orientation = orientation
     }
-    
+
     func frame(forParentView parentView: UIView, inOrientation orientation: UIDeviceOrientation) -> CGRect? {
         switch self.orientation {
         case .any:
@@ -146,24 +146,24 @@ open class HoleViewDescriptor: HoleDescriptor {
     public let view: UIView
     public let paddingX: CGFloat
     public let paddingY: CGFloat
-    
+
     public init(view: UIView, paddingX: CGFloat, paddingY: CGFloat, type: HoleType, forOrientation orientation: PassthroughOrientation) {
         self.view = view
         self.paddingX = paddingX
         self.paddingY = paddingY
         let highlightedFrame = view.frame.insetBy(dx: -paddingX, dy: -paddingY)
-        
+
         super.init(frame: highlightedFrame, type: type, forOrientation: orientation)
     }
-    
+
     public convenience init(view: UIView, type: HoleType) {
         self.init(view: view, paddingX: 0, paddingY: 0, type: type, forOrientation: .any)
     }
-    
+
     public convenience init(view: UIView, type: HoleType, forOrientation orientation: PassthroughOrientation) {
         self.init(view: view, paddingX: 0, paddingY: 0, type: type, forOrientation: orientation)
     }
-    
+
     override func frame(forParentView parentView: UIView, inOrientation orientation: UIDeviceOrientation) -> CGRect? {
         let convertedFrame = view.superview?.convert(view.frame, to: parentView)
         let highlightedFrame = convertedFrame?.insetBy(dx: -paddingX, dy: -paddingY).integral
@@ -180,23 +180,21 @@ open class HoleViewDescriptor: HoleDescriptor {
 }
 
 open class CellViewDescriptor: HoleDescriptor {
-    
     public let indexPath: IndexPath
     public let tableView: UITableView
-    
+
     public init(tableView: UITableView, indexPath: IndexPath, forOrientation orientation: PassthroughOrientation) {
         self.tableView = tableView
         self.indexPath = indexPath
         let highlightedFrame = tableView.cellForRow(at: indexPath)?.frame ?? CGRect.zero
-        
+
         super.init(frame: highlightedFrame, type: .rect(cornerRadius: 5, margin: 0), forOrientation: orientation)
     }
-    
+
     override func frame(forParentView parentView: UIView, inOrientation orientation: UIDeviceOrientation) -> CGRect? {
-        
         guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
         let highlightedFrame = cell.superview?.convert(cell.frame, to: parentView)
-        
+
         switch self.orientation {
         case .any:
             return highlightedFrame
@@ -218,14 +216,14 @@ open class Descriptor {
     public let text: String
     public var aligment: LabelAligment = .center
     public var widthControl: WidthControl = .ratio(0.7)
-    
+
     init(for text: String) {
         self.text = text
         initialSetup()
     }
-    
+
     // MARK: Private
-    
+
     private func initialSetup() {
         label.backgroundColor = UIColor.clear
         label.textColor = UIColor.white
@@ -239,7 +237,7 @@ open class Descriptor {
 open class LabelDescriptor: Descriptor {
     public var position: LabelPosition = .bottom
     public var margin: CGFloat = 20
-    
+
     public override init(for text: String) {
         super.init(for: text)
         PassthroughManager.shared.labelCommonConfigurator?(self)
@@ -248,7 +246,7 @@ open class LabelDescriptor: Descriptor {
 
 open class InfoDescriptor: Descriptor {
     public var offset = CGPoint.zero
-    
+
     public override init(for text: String) {
         super.init(for: text)
         PassthroughManager.shared.infoCommonConfigurator?(self)
